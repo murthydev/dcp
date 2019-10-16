@@ -145,6 +145,7 @@ def test_one_epoch(args, net, test_loader):
 
 def train_one_epoch(args, net, train_loader, opt):
     net.train()
+    # net.double()
 
     mse_ab = 0
     mae_ab = 0
@@ -167,7 +168,16 @@ def train_one_epoch(args, net, train_loader, opt):
     eulers_ab = []
     eulers_ba = []
 
+    # count =1
     for src, target, rotation_ab, translation_ab, rotation_ba, translation_ba, euler_ab, euler_ba in tqdm(train_loader):
+
+        # # count=0
+        # src_dyn = np.ones((32,3,1024+count))*0.9
+        # trgt_dyn =  np.ones((32,3,1024+count))*0.5
+        # src = torch.from_numpy(src_dyn).float().cuda()        
+        # target = torch.from_numpy(trgt_dyn).float().cuda() 
+        # count = count +1       
+        # print(src.shape,target.shape)
         src = src.cuda()
         target = target.cuda()
         rotation_ab = rotation_ab.cuda()
@@ -528,7 +538,7 @@ def main():
     parser.add_argument('--head', type=str, default='svd', metavar='N',
                         choices=['mlp', 'svd', ],
                         help='Head to use, [mlp, svd]')
-    parser.add_argument('--emb_dims', type=int, default=512, metavar='N',
+    parser.add_argument('--emb_dims', type=int, default=1024, metavar='N',
                         help='Dimension of embeddings')
     parser.add_argument('--n_blocks', type=int, default=1, metavar='N',
                         help='Num of blocks of encoder&decoder')
@@ -548,7 +558,7 @@ def main():
                         help='Use SGD')
     parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                         help='learning rate (default: 0.001, 0.1 if using sgd)')
-    parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
+    parser.add_argument('--momentum', type=float, default=0.09, metavar='M',
                         help='SGD momentum (default: 0.9)')
     parser.add_argument('--no_cuda', action='store_true', default=False,
                         help='enables CUDA training')
